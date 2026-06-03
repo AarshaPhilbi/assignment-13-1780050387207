@@ -3,6 +3,7 @@ import type { Order } from './App';
 
 interface Props {
   orders: Order[];
+  selectedStatus: 'all' | 'received' | 'in_cleaning' | 'ready' | 'delivered';
 }
 
 const statusLabel: Record<string, string> = {
@@ -12,14 +13,31 @@ const statusLabel: Record<string, string> = {
   delivered: 'Delivered',
 };
 
-export const OrdersList: React.FC<Props> = ({ orders }) => {
+export const OrdersList: React.FC<Props> = ({ orders, selectedStatus }) => {
+  const filteredOrders = orders
+  .map(order => ({
+    ...order,
+    garments: order.garments.filter(g => 
+      selectedStatus === 'all' || g.status === selectedStatus
+    )
+  }))
+  .filter(order => order.garments.length > 0);
+
+  if (filteredOrders.length === 0) {
+    return <p>No garments found with status: {selectedStatus}</p>;
+  }
+
+// No matching garments message
+if (filteredOrders.length === 0) {
+  return <p>No garments found with status: {selectedStatus}</p>;
+}
   if (orders.length === 0) {
     return <p>No active orders.</p>;
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {orders.map((order) => (
+      {filteredOrders.map((order) => (
         <div
           key={order.id}
           style={{
