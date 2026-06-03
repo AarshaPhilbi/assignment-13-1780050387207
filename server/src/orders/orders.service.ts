@@ -47,4 +47,32 @@ export class OrdersService {
   }
 
   // NOTE: You will add more methods here in the implementation tasks.
+  getGarmentStatus():{[status:string]:number}{
+    const allOrder=this.findAll();
+
+    if ( !allOrder || allOrder.length==0){
+      return {};
+    }
+
+    const garmentCount:{[status:string]:number}={};
+
+    allOrder.forEach(order=>{
+      
+      order.garments.forEach(g=>{
+
+        if(!g){
+          return
+        }
+
+        const status=g.status;
+        garmentCount[status]=(garmentCount[status]||0)+1;
+
+      });
+    });
+
+    return garmentCount;
+
+  
+  
+}
 }

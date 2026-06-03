@@ -9,6 +9,11 @@ export class OrdersController {
   getOrders(): Order[] {
     return this.ordersService.findAll();
   }
+  @Get('summary')
+  getSummary(): { [status: string]: number } {
+    return this.ordersService.getGarmentStatus();
+    
+  }
 
   @Get(':id')
   getOrder(@Param('id') id: string): Order | { error: string } {
@@ -18,4 +23,6 @@ export class OrdersController {
     }
     return order;
   }
+
+  
 }
